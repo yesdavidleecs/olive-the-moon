@@ -1,4 +1,39 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Password protection
+    const PASSWORD = 'loveyou'; // Change this to your desired password
+    
+    const loginContainer = document.getElementById('loginContainer');
+    const mainContent = document.getElementById('mainContent');
+    const loginForm = document.getElementById('loginForm');
+    const passwordInput = document.getElementById('passwordInput');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    // Handle login
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (passwordInput.value === PASSWORD) {
+            // Correct password - show main content
+            loginContainer.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            
+            // Clear the password field
+            passwordInput.value = '';
+            errorMessage.classList.add('hidden');
+        } else {
+            // Wrong password - show error
+            errorMessage.classList.remove('hidden');
+            passwordInput.value = '';
+            
+            // Add shake animation to input
+            passwordInput.style.animation = 'shake 0.5s ease';
+            setTimeout(() => {
+                passwordInput.style.animation = '';
+            }, 500);
+        }
+    });
+    
+    // Original envelope and letter functionality
     const envelope = document.getElementById('envelope');
     const letter = document.getElementById('letter');
     const confettiContainer = document.getElementById('confetti');
