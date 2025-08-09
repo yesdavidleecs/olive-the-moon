@@ -21,8 +21,26 @@
     </div>
 
     <!-- Main Content (hidden initially) -->
-    <div class="container hidden" id="mainContent">
-        <div class="envelope" id="envelope">
+    <div class="main-wrapper hidden" id="mainContent">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <h3 class="nav-brand">Birthday Surprise</h3>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-page="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" data-page="coupons">Coupons</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Home Page -->
+        <div class="page-content" id="homePage">
+            <div class="container">
+                <div class="envelope" id="envelope">
             <div class="envelope-flap"></div>
             <div class="envelope-body">
                 <p class="envelope-text">Click to open</p>
@@ -52,6 +70,22 @@
                 <span class="heart"></span>
                 <span class="heart"></span>
                 <span class="heart"></span>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <!-- Coupons Page -->
+        <div class="page-content hidden" id="couponsPage">
+            <div class="container">
+                <h1 class="coupons-title">Love Coupons</h1>
+                <p class="coupons-subtitle">Special treats just for you!</p>
+                <div class="coupons-grid" id="couponsGrid">
+                    <!-- Coupon images will be loaded here dynamically -->
+                </div>
+                <div class="no-coupons hidden" id="noCoupons">
+                    <p>No coupons yet! Add images to the 'coupons' folder.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Clear the password field
             passwordInput.value = '';
             errorMessage.classList.add('hidden');
+            
+            // Load coupons after login
+            loadCoupons();
         } else {
             // Wrong password - show error
             errorMessage.classList.remove('hidden');
@@ -32,6 +35,128 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
         }
     });
+    
+    // Navigation functionality
+    const navLinks = document.querySelectorAll('.nav-link');
+    const homePage = document.getElementById('homePage');
+    const couponsPage = document.getElementById('couponsPage');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Show/hide pages based on data-page attribute
+            const page = this.getAttribute('data-page');
+            
+            if (page === 'home') {
+                homePage.classList.remove('hidden');
+                couponsPage.classList.add('hidden');
+            } else if (page === 'coupons') {
+                homePage.classList.add('hidden');
+                couponsPage.classList.remove('hidden');
+            }
+        });
+    });
+    
+    // Load coupon images
+    function loadCoupons() {
+        const couponsGrid = document.getElementById('couponsGrid');
+        const noCoupons = document.getElementById('noCoupons');
+        
+        // List of coupon images - you'll need to update this with actual filenames
+        // For GitHub Pages, these will be relative paths to images in the coupons folder
+        const couponImages = [
+            // Add your coupon image filenames here, for example:
+            // 'coupons/massage-coupon.jpg',
+            // 'coupons/dinner-date.jpg',
+            // 'coupons/movie-night.jpg',
+        ];
+        
+        if (couponImages.length === 0) {
+            // Show message if no coupons
+            noCoupons.classList.remove('hidden');
+        } else {
+            // Hide no coupons message
+            noCoupons.classList.add('hidden');
+            
+            // Clear grid and add coupon cards
+            couponsGrid.innerHTML = '';
+            
+            couponImages.forEach((imagePath, index) => {
+                const fileName = imagePath.split('/').pop();
+                const couponName = fileName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ');
+                
+                const couponCard = document.createElement('div');
+                couponCard.className = 'coupon-card';
+                couponCard.innerHTML = `
+                    <img src="${imagePath}" alt="${couponName}" onerror="this.style.display='none'">
+                    <div class="coupon-card-title">${formatCouponName(couponName)}</div>
+                `;
+                
+                couponsGrid.appendChild(couponCard);
+            });
+        }
+        
+        // Also check for dynamically loaded images from the coupons directory
+        // This is a placeholder for when you add actual images
+        checkForLocalImages();
+    }
+    
+    function formatCouponName(name) {
+        return name.split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+    
+    function checkForLocalImages() {
+        // Try to load images from the coupons directory
+        // This is a simple approach - you can manually add image names here
+        const possibleImages = [
+            'massage-coupon.jpg',
+            'breakfast-in-bed.jpg',
+            'movie-night.jpg',
+            'date-night.jpg',
+            'free-hug.jpg',
+            'no-chores.jpg',
+            'coupon.jpg'
+        ];
+        
+        const couponsGrid = document.getElementById('couponsGrid');
+        const noCoupons = document.getElementById('noCoupons');
+        
+        possibleImages.forEach(imageName => {
+            const img = new Image();
+            img.onload = function() {
+                // Image exists, add it to the grid
+                if (couponsGrid.children.length === 0 || 
+                    !Array.from(couponsGrid.children).some(child => 
+                        child.querySelector('img')?.src.includes(imageName))) {
+                    
+                    noCoupons.classList.add('hidden');
+                    
+                    const couponName = imageName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ');
+                    const couponCard = document.createElement('div');
+                    couponCard.className = 'coupon-card';
+                    couponCard.innerHTML = `
+                        <img src="coupons/${imageName}" alt="${couponName}">
+                        <div class="coupon-card-title">${formatCouponName(couponName)}</div>
+                    `;
+                    
+                    couponsGrid.appendChild(couponCard);
+                }
+            };
+            img.onerror = function() {
+                // Image doesn't exist, do nothing
+            };
+            img.src = `coupons/${imageName}`;
+        });
+    }
     
     // Original envelope and letter functionality
     const envelope = document.getElementById('envelope');
