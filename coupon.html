@@ -85,6 +85,19 @@
         </div>
     </div>
 
-    <script src="coupon.js"></script>
+    <!-- Firebase Scripts -->
+    <!-- Add these before your custom scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Your Firebase configuration -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Main coupon script - Choose one: -->
+    <!-- Option 1: With Firebase (online storage) -->
+    <script src="coupon-firebase.js"></script>
+    
+    <!-- Option 2: Local storage only (comment out the line above and uncomment below) -->
+    <!-- <script src="coupon.js"></script> -->
 </body>
 </html>
