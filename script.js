@@ -99,6 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="coupon-card-title">${formatCouponName(couponName)}</div>
                 `;
                 
+                // Add click handler to navigate to coupon detail page
+                couponCard.addEventListener('click', function() {
+                    window.location.href = `coupon.html?name=${fileName}&amount=15000`;
+                });
+                
                 couponsGrid.appendChild(couponCard);
             });
         }
@@ -147,6 +152,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <img src="coupons/${imageName}" alt="${couponName}">
                         <div class="coupon-card-title">${formatCouponName(couponName)}</div>
                     `;
+                    
+                    // Add click handler to navigate to coupon detail page
+                    couponCard.addEventListener('click', function() {
+                        window.location.href = `coupon.html?name=${imageName}&amount=15000`;
+                    });
                     
                     couponsGrid.appendChild(couponCard);
                 }

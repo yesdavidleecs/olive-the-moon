@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Coupon</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h2 class="login-title">Enter the Magic Word</h2>
+            <p class="login-subtitle">This coupon is for someone special</p>
+            <form id="loginForm">
+                <input type="password" id="passwordInput" placeholder="Enter password" required>
+                <button type="submit" class="login-button">View Coupon</button>
+            </form>
+            <p class="error-message hidden" id="errorMessage">Incorrect password. Try again!</p>
+        </div>
+    </div>
+
+    <!-- Coupon Detail Page -->
+    <div class="coupon-detail-wrapper hidden" id="mainContent">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <h3 class="nav-brand">Birthday Surprise</h3>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#coupons" class="nav-link">Back to Coupons</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="coupon-detail-content">
+            <div class="coupon-detail-card">
+                <div class="coupon-header">
+                    <h1 class="coupon-detail-title">
+                        Birthday Present Coupon 
+                        <span class="coupon-value">$<span id="couponAmount">15000</span></span>
+                    </h1>
+                </div>
+                
+                <div class="coupon-message">
+                    <p>This coupon entitles you to one special day filled with love, laughter, and all your favorite things!</p>
+                    <p class="no-expiration">No expiration date ♥</p>
+                </div>
+
+                <div class="coupon-image-container" id="couponImageContainer">
+                    <!-- Dynamic image will be inserted here -->
+                </div>
+
+                <div class="redemption-section">
+                    <h3>Redeem Your Coupon</h3>
+                    <p class="redemption-info">Current Balance: $<span id="currentBalance">15000</span></p>
+                    
+                    <form id="redemptionForm">
+                        <div class="redemption-input-group">
+                            <label for="redeemAmount">Amount to redeem:</label>
+                            <div class="input-with-prefix">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="redeemAmount" min="1" step="1" placeholder="Enter amount" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="redeem-button">Redeem</button>
+                    </form>
+                    
+                    <div class="redemption-message hidden" id="redemptionMessage"></div>
+                    
+                    <div class="redemption-history hidden" id="redemptionHistory">
+                        <h4>Redemption History</h4>
+                        <ul id="historyList"></ul>
+                    </div>
+                </div>
+
+                <div class="coupon-footer">
+                    <p>Made with love, just for you ♥</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="coupon.js"></script>
+</body>
+</html>
