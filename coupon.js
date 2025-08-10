@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Password protection
-    const PASSWORD = 'loveyou'; // Same password as main page
+    const PASSWORD = 'iloveyou'; // Same password as main page
     
     const loginContainer = document.getElementById('loginContainer');
     const mainContent = document.getElementById('mainContent');
