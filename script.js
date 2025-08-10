@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Password protection
-    const PASSWORD = 'loveyou'; // Change this to your desired password
+    const PASSWORD = 'iloveyou'; // Change this to your desired password
     
     const loginContainer = document.getElementById('loginContainer');
     const mainContent = document.getElementById('mainContent');
@@ -121,16 +121,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function checkForLocalImages() {
         // Try to load images from the coupons directory
-        // This is a simple approach - you can manually add image names here
-        const possibleImages = [
-            'massage-coupon.jpg',
-            'breakfast-in-bed.jpg',
-            'movie-night.jpg',
-            'date-night.jpg',
-            'free-hug.jpg',
-            'no-chores.jpg',
-            'coupon.jpg'
-        ];
+        // Special coupons configuration
+        const specialCoupons = {
+            'coupon.jpg': { type: 'monetary', amount: 15000 },
+            'massage-coupon.jpg': { type: 'usage', couponType: 'massage' },
+            'breakfast-in-bed.jpg': { type: 'usage', couponType: 'breakfast' },
+            'argument-loss.jpg': { type: 'usage', couponType: 'argument' }
+        };
+        
+        // All possible images to check
+        const possibleImages = Object.keys(specialCoupons);
         
         const couponsGrid = document.getElementById('couponsGrid');
         const noCoupons = document.getElementById('noCoupons');
@@ -148,14 +148,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     const couponName = imageName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ');
                     const couponCard = document.createElement('div');
                     couponCard.className = 'coupon-card';
+                    
+                    // Get display name for the coupon
+                    let displayName = couponName;
+                    if (imageName === 'argument-loss.jpg') {
+                        displayName = 'Argument Loss Coupon';
+                    } else if (imageName === 'massage-coupon.jpg') {
+                        displayName = 'Massage Coupon';
+                    } else if (imageName === 'breakfast-in-bed.jpg') {
+                        displayName = 'Breakfast in Bed';
+                    } else {
+                        displayName = formatCouponName(couponName);
+                    }
+                    
                     couponCard.innerHTML = `
-                        <img src="coupons/${imageName}" alt="${couponName}">
-                        <div class="coupon-card-title">${formatCouponName(couponName)}</div>
+                        <img src="coupons/${imageName}" alt="${displayName}">
+                        <div class="coupon-card-title">${displayName}</div>
                     `;
                     
-                    // Add click handler to navigate to coupon detail page
+                    // Add click handler based on coupon type
+                    const couponConfig = specialCoupons[imageName];
                     couponCard.addEventListener('click', function() {
-                        window.location.href = `coupon.html?name=${imageName}&amount=15000`;
+                        if (couponConfig && couponConfig.type === 'usage') {
+                            // Navigate to usage-based coupon page
+                            window.location.href = `coupon-usage.html?type=${couponConfig.couponType}`;
+                        } else {
+                            // Navigate to monetary coupon page
+                            window.location.href = `coupon.html?name=${imageName}&amount=${couponConfig?.amount || 15000}`;
+                        }
                     });
                     
                     couponsGrid.appendChild(couponCard);

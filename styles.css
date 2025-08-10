@@ -389,19 +389,25 @@ body {
 }
 
 .coupons-title {
-    color: #764ba2;
+    color: white;
     text-align: center;
     font-size: 2.5em;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
 }
 
 .coupons-subtitle {
     text-align: center;
-    color: #666;
+    color: white;
     font-size: 1.2em;
     margin-bottom: 40px;
     font-style: italic;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    opacity: 0.95;
 }
 
 .coupons-grid {
@@ -682,6 +688,78 @@ body {
 .coupon-footer p {
     color: #999;
     font-style: italic;
+}
+
+.usage-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(118, 75, 162, 0.1);
+    border-radius: 10px;
+}
+
+.usage-text {
+    font-size: 1.2em;
+    color: #666;
+    font-weight: 600;
+}
+
+.usage-count {
+    font-size: 2em;
+    font-weight: bold;
+    color: #764ba2;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 10px;
+    border: 3px solid #764ba2;
+    min-width: 60px;
+    text-align: center;
+}
+
+.usage-count.usage-depleted {
+    color: #999;
+    border-color: #999;
+    background: #f5f5f5;
+}
+
+.fully-redeemed {
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    border-radius: 15px;
+    margin: 30px 0;
+}
+
+.fully-redeemed h3 {
+    color: #764ba2;
+    font-size: 2em;
+    margin-bottom: 15px;
+}
+
+.fully-redeemed p {
+    color: #666;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.reset-button-visible {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #764ba2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.reset-button-visible:hover {
+    opacity: 1;
 }
 
 @media (max-width: 768px) {
