@@ -120,71 +120,87 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function checkForLocalImages() {
-        // Try to load images from the coupons directory
-        // Special coupons configuration
-        const specialCoupons = {
-            'coupon.jpg': { type: 'monetary', amount: 15000 },
-            'massage-coupon.jpg': { type: 'usage', couponType: 'massage' },
-            'breakfast-in-bed.jpg': { type: 'usage', couponType: 'breakfast' },
-            'argument-loss.jpg': { type: 'usage', couponType: 'argument' }
-        };
-        
-        // All possible images to check
-        const possibleImages = Object.keys(specialCoupons);
+        // Special coupons configuration - all use coupon.jpg if specific image not found
+        const specialCoupons = [
+            { 
+                imageName: 'coupon.jpg', 
+                displayName: 'Birthday Present Coupon', 
+                type: 'monetary', 
+                amount: 15000 
+            },
+            { 
+                imageName: 'massage-coupon.jpg', 
+                fallbackImage: 'coupon.jpg',
+                displayName: 'Massage Coupon', 
+                type: 'usage', 
+                couponType: 'massage' 
+            },
+            { 
+                imageName: 'breakfast-in-bed.jpg', 
+                fallbackImage: 'coupon.jpg',
+                displayName: 'Breakfast in Bed Coupon', 
+                type: 'usage', 
+                couponType: 'breakfast' 
+            },
+            { 
+                imageName: 'argument-loss.jpg', 
+                fallbackImage: 'coupon.jpg',
+                displayName: 'Argument Loss Coupon', 
+                type: 'usage', 
+                couponType: 'argument' 
+            }
+        ];
         
         const couponsGrid = document.getElementById('couponsGrid');
         const noCoupons = document.getElementById('noCoupons');
         
-        possibleImages.forEach(imageName => {
-            const img = new Image();
-            img.onload = function() {
-                // Image exists, add it to the grid
-                if (couponsGrid.children.length === 0 || 
-                    !Array.from(couponsGrid.children).some(child => 
-                        child.querySelector('img')?.src.includes(imageName))) {
-                    
-                    noCoupons.classList.add('hidden');
-                    
-                    const couponName = imageName.replace(/\.[^/.]+$/, '').replace(/-/g, ' ');
-                    const couponCard = document.createElement('div');
-                    couponCard.className = 'coupon-card';
-                    
-                    // Get display name for the coupon
-                    let displayName = couponName;
-                    if (imageName === 'argument-loss.jpg') {
-                        displayName = 'Argument Loss Coupon';
-                    } else if (imageName === 'massage-coupon.jpg') {
-                        displayName = 'Massage Coupon';
-                    } else if (imageName === 'breakfast-in-bed.jpg') {
-                        displayName = 'Breakfast in Bed';
-                    } else {
-                        displayName = formatCouponName(couponName);
-                    }
-                    
-                    couponCard.innerHTML = `
-                        <img src="coupons/${imageName}" alt="${displayName}">
-                        <div class="coupon-card-title">${displayName}</div>
-                    `;
-                    
-                    // Add click handler based on coupon type
-                    const couponConfig = specialCoupons[imageName];
-                    couponCard.addEventListener('click', function() {
-                        if (couponConfig && couponConfig.type === 'usage') {
-                            // Navigate to usage-based coupon page
-                            window.location.href = `coupon-usage.html?type=${couponConfig.couponType}`;
-                        } else {
-                            // Navigate to monetary coupon page
-                            window.location.href = `coupon.html?name=${imageName}&amount=${couponConfig?.amount || 15000}`;
-                        }
-                    });
-                    
-                    couponsGrid.appendChild(couponCard);
+        // Hide "no coupons" message since we're adding coupons
+        noCoupons.classList.add('hidden');
+        
+        // Add all coupons to the grid
+        specialCoupons.forEach(couponConfig => {
+            // Check if card already exists
+            if (Array.from(couponsGrid.children).some(child => 
+                child.querySelector('.coupon-card-title')?.textContent === couponConfig.displayName)) {
+                return;
+            }
+            
+            const couponCard = document.createElement('div');
+            couponCard.className = 'coupon-card';
+            
+            // Try to use specific image, fallback to coupon.jpg if needed
+            const imageToUse = couponConfig.fallbackImage || couponConfig.imageName;
+            
+            couponCard.innerHTML = `
+                <img src="coupons/${imageToUse}" alt="${couponConfig.displayName}" onerror="this.src='coupons/coupon.jpg'">
+                <div class="coupon-card-title">${couponConfig.displayName}</div>
+            `;
+            
+            // Add click handler based on coupon type
+            couponCard.addEventListener('click', function() {
+                if (couponConfig.type === 'usage') {
+                    // Navigate to usage-based coupon page
+                    window.location.href = `coupon-usage.html?type=${couponConfig.couponType}`;
+                } else {
+                    // Navigate to monetary coupon page  
+                    window.location.href = `coupon.html?name=${couponConfig.imageName}&amount=${couponConfig.amount || 15000}`;
                 }
-            };
-            img.onerror = function() {
-                // Image doesn't exist, do nothing
-            };
-            img.src = `coupons/${imageName}`;
+            });
+            
+            couponsGrid.appendChild(couponCard);
+            
+            // Try to load the specific image if it exists
+            if (couponConfig.fallbackImage) {
+                const img = new Image();
+                img.onload = function() {
+                    // If specific image exists, update the src
+                    const cardImg = couponCard.querySelector('img');
+                    if (cardImg) {
+                        cardImg.src = `coupons/${couponConfig.imageName}`;
+                    }
+                };
+                img.src = `coupons/${couponConfig.imageName}`;
+            }
         });
     }
     
