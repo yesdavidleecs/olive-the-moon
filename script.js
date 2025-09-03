@@ -148,6 +148,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayName: 'Argument Loss Coupon', 
                 type: 'usage', 
                 couponType: 'argument' 
+            },
+            { 
+                imageName: 'workout-progress.jpg', 
+                fallbackImage: 'coupon.jpg',
+                displayName: 'Workout Progress Coupon', 
+                type: 'workout', 
+                couponType: 'workout' 
             }
         ];
         
@@ -181,6 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (couponConfig.type === 'usage') {
                     // Navigate to usage-based coupon page
                     window.location.href = `coupon-usage.html?type=${couponConfig.couponType}`;
+                } else if (couponConfig.type === 'workout') {
+                    // Navigate to workout progress coupon page
+                    window.location.href = `workout-progress.html?type=${couponConfig.couponType}`;
                 } else {
                     // Navigate to monetary coupon page  
                     window.location.href = `coupon.html?name=${couponConfig.imageName}&amount=${couponConfig.amount || 15000}`;

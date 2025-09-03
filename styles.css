@@ -762,6 +762,174 @@ body {
     opacity: 1;
 }
 
+/* Workout Progress Coupon Styles */
+.workout-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    border: 2px solid #dee2e6;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 1.1em;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: #764ba2;
+    font-size: 1.3em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.workout-controls {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    margin: 30px 0;
+    border: 2px solid #dee2e6;
+}
+
+.workout-controls h3 {
+    color: #764ba2;
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+.workout-info {
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.workout-button {
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.increment-button {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.increment-button:hover {
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.reset-button {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    color: white;
+}
+
+.reset-button:hover {
+    background: linear-gradient(135deg, #c82333 0%, #e8590c 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+}
+
+.workout-message {
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.workout-message.success {
+    background: #d4edda;
+    color: #155724;
+    border: 2px solid #c3e6cb;
+}
+
+.workout-message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 2px solid #f5c6cb;
+}
+
+.workout-history {
+    margin: 30px 0;
+    padding: 25px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    border: 2px solid #dee2e6;
+}
+
+.workout-history h4 {
+    color: #764ba2;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.workout-history ul {
+    list-style: none;
+    padding: 0;
+}
+
+.workout-history li {
+    background: white;
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #764ba2;
+}
+
+.workout-history li strong {
+    color: #764ba2;
+    font-size: 1.1em;
+}
+
+.workout-history li small {
+    color: #666;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+    .button-group {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .workout-button {
+        min-width: 200px;
+    }
+}
+
 @media (max-width: 768px) {
     .nav-container {
         padding: 10px 15px;
