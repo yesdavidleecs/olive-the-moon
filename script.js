@@ -22,6 +22,11 @@ document.addEventListener('DOMContentLoaded', function() {
             loginContainer.classList.add('hidden');
             mainContent.classList.remove('hidden');
             loadCoupons();
+            
+            // Check if URL has #coupons hash and show coupons page
+            if (window.location.hash === '#coupons') {
+                showCouponsPage();
+            }
             return;
         }
         
@@ -41,6 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Load coupons after login
                 loadCoupons();
+                
+                // Check if URL has #coupons hash and show coupons page
+                if (window.location.hash === '#coupons') {
+                    showCouponsPage();
+                }
             } else {
                 // Wrong password - show error
                 errorMessage.classList.remove('hidden');
@@ -54,6 +64,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Function to show coupons page
+    function showCouponsPage() {
+        // Update navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(l => l.classList.remove('active'));
+        const couponsLink = document.querySelector('[data-page="coupons"]');
+        if (couponsLink) {
+            couponsLink.classList.add('active');
+        }
+        
+        // Show coupons page, hide home page
+        const homePage = document.getElementById('homePage');
+        const couponsPage = document.getElementById('couponsPage');
+        if (homePage && couponsPage) {
+            homePage.classList.add('hidden');
+            couponsPage.classList.remove('hidden');
+        }
+    }
+    
+    // Check URL hash on page load and navigation
+    function checkUrlHash() {
+        if (window.location.hash === '#coupons') {
+            showCouponsPage();
+        }
+    }
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', checkUrlHash);
+    
+    // Check hash on initial page load
+    setTimeout(checkUrlHash, 100);
     
     // Navigation functionality
     const navLinks = document.querySelectorAll('.nav-link');
