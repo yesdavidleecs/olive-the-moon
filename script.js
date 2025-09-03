@@ -1,40 +1,59 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Password protection
-    const PASSWORD = 'iloveyou'; // Change this to your desired password
+    // Include authentication utilities
+    const script = document.createElement('script');
+    script.src = 'auth-utils.js';
+    document.head.appendChild(script);
     
-    const loginContainer = document.getElementById('loginContainer');
-    const mainContent = document.getElementById('mainContent');
-    const loginForm = document.getElementById('loginForm');
-    const passwordInput = document.getElementById('passwordInput');
-    const errorMessage = document.getElementById('errorMessage');
+    script.onload = function() {
+        // Wait for auth manager to be ready
+        setTimeout(initApp, 100);
+    };
     
-    // Handle login
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    function initApp() {
+        const loginContainer = document.getElementById('loginContainer');
+        const mainContent = document.getElementById('mainContent');
+        const loginForm = document.getElementById('loginForm');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('errorMessage');
         
-        if (passwordInput.value === PASSWORD) {
-            // Correct password - show main content
+        // Check if user is already authenticated
+        if (authManager.isAuthenticated) {
+            console.log('✅ User already authenticated, showing main content');
             loginContainer.classList.add('hidden');
             mainContent.classList.remove('hidden');
-            
-            // Clear the password field
-            passwordInput.value = '';
-            errorMessage.classList.add('hidden');
-            
-            // Load coupons after login
             loadCoupons();
-        } else {
-            // Wrong password - show error
-            errorMessage.classList.remove('hidden');
-            passwordInput.value = '';
-            
-            // Add shake animation to input
-            passwordInput.style.animation = 'shake 0.5s ease';
-            setTimeout(() => {
-                passwordInput.style.animation = '';
-            }, 500);
+            return;
         }
-    });
+        
+        // Handle login
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (authManager.validatePassword(passwordInput.value)) {
+                // Correct password - create session and show main content
+                authManager.createSession();
+                loginContainer.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                
+                // Clear the password field
+                passwordInput.value = '';
+                errorMessage.classList.add('hidden');
+                
+                // Load coupons after login
+                loadCoupons();
+            } else {
+                // Wrong password - show error
+                errorMessage.classList.remove('hidden');
+                passwordInput.value = '';
+                
+                // Add shake animation to input
+                passwordInput.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    passwordInput.style.animation = '';
+                }, 500);
+            }
+        });
+    }
     
     // Navigation functionality
     const navLinks = document.querySelectorAll('.nav-link');
