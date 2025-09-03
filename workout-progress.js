@@ -108,6 +108,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                 displayHistory(workoutData.history);
             }
             
+            // Setup button listeners after content is displayed
+            setupButtonListeners();
+            
             console.log('========================================');
         }
         
@@ -119,12 +122,157 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('rewardAmount').textContent = `$${workoutConfig.rewardPerWorkout.toLocaleString()}`;
         }
         
+        // Setup button event listeners after content is displayed
+        function setupButtonListeners() {
+            console.log('🔘 Setting up button event listeners...');
+            
+            // Handle increment button (complete workout)
+            const incrementButton = document.getElementById('incrementButton');
+            if (incrementButton) {
+                incrementButton.addEventListener('click', async function() {
+                    console.log('🏋️ Workout button clicked!');
+                    
+                    // Increment streak
+                    currentStreak++;
+                    
+                    // Add reward to monetary value
+                    monetaryValue += workoutConfig.rewardPerWorkout;
+                    
+                    // Update highest streak if current is higher
+                    if (currentStreak > highestStreak) {
+                        highestStreak = currentStreak;
+                    }
+                    
+                    // Create history entry
+                    const now = new Date();
+                    const historyEntry = {
+                        action: 'workout_completed',
+                        date: now.toLocaleDateString(),
+                        time: now.toLocaleTimeString(),
+                        streakAfter: currentStreak,
+                        monetaryValueAfter: monetaryValue,
+                        highestStreakAfter: highestStreak,
+                        rewardEarned: workoutConfig.rewardPerWorkout,
+                        timestamp: now.toISOString()
+                    };
+                    
+                    // Save to storage
+                    try {
+                        // Try Firebase first
+                        console.log('🔄 Updating workout progress in Firebase...');
+                        await db.collection('workout-coupons').doc(couponType).update({
+                            currentStreak: currentStreak,
+                            monetaryValue: monetaryValue,
+                            highestStreak: highestStreak,
+                            history: firebase.firestore.FieldValue.arrayUnion(historyEntry),
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        console.log('✅ Firebase updated successfully');
+                    } catch (error) {
+                        console.error('❌ Firebase update error:', error.message);
+                        console.log('💾 Saving to localStorage instead');
+                    }
+                    
+                    // Always save to localStorage as backup
+                    const localData = {
+                        currentStreak: currentStreak,
+                        monetaryValue: monetaryValue,
+                        highestStreak: highestStreak,
+                        history: workoutData.history || []
+                    };
+                    localData.history.push(historyEntry);
+                    localStorage.setItem(storageKey, JSON.stringify(localData));
+                    
+                    // Update workout data
+                    workoutData = localData;
+                    
+                    // Update display
+                    updateDisplay();
+                    
+                    // Update history display
+                    displayHistory(workoutData.history);
+                    
+                    // Show success message
+                    showMessage(`Great job! Workout completed! +1 streak, +$${workoutConfig.rewardPerWorkout.toLocaleString()} earned! 🏋️`, 'success');
+                });
+                console.log('✅ Increment button listener added');
+            } else {
+                console.error('❌ Increment button not found!');
+            }
+            
+            // Handle reset button
+            const resetButton = document.getElementById('resetButton');
+            if (resetButton) {
+                resetButton.addEventListener('click', async function() {
+                    if (confirm('Are you sure you want to reset your streak? Your monetary value will remain unchanged.')) {
+                        // Reset streak only (monetary value stays the same)
+                        const previousStreak = currentStreak;
+                        currentStreak = 0;
+                        
+                        // Create history entry
+                        const now = new Date();
+                        const historyEntry = {
+                            action: 'streak_reset',
+                            date: now.toLocaleDateString(),
+                            time: now.toLocaleTimeString(),
+                            streakBefore: previousStreak,
+                            streakAfter: currentStreak,
+                            monetaryValueAfter: monetaryValue,
+                            highestStreakAfter: highestStreak,
+                            timestamp: now.toISOString()
+                        };
+                        
+                        // Save to storage
+                        try {
+                            // Try Firebase first
+                            console.log('🔄 Resetting streak in Firebase...');
+                            await db.collection('workout-coupons').doc(couponType).update({
+                                currentStreak: currentStreak,
+                                history: firebase.firestore.FieldValue.arrayUnion(historyEntry),
+                                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            console.log('✅ Firebase updated successfully');
+                        } catch (error) {
+                            console.error('❌ Firebase update error:', error.message);
+                            console.log('💾 Saving to localStorage instead');
+                        }
+                        
+                        // Always save to localStorage as backup
+                        const localData = {
+                            currentStreak: currentStreak,
+                            monetaryValue: monetaryValue,
+                            highestStreak: highestStreak,
+                            history: workoutData.history || []
+                        };
+                        localData.history.push(historyEntry);
+                        localStorage.setItem(storageKey, JSON.stringify(localData));
+                        
+                        // Update workout data
+                        workoutData = localData;
+                        
+                        // Update display
+                        updateDisplay();
+                        
+                        // Update history display
+                        displayHistory(workoutData.history);
+                        
+                        // Show success message
+                        showMessage(`Streak reset! Your monetary value remains at $${monetaryValue.toLocaleString()} 💰`, 'info');
+                    }
+                });
+                console.log('✅ Reset button listener added');
+            } else {
+                console.error('❌ Reset button not found!');
+            }
+        }
+        
         // Check if user is already authenticated
         if (authManager.isAuthenticated) {
             console.log('✅ User already authenticated, showing workout coupon');
             loginContainer.classList.add('hidden');
             mainContent.classList.remove('hidden');
             await loadWorkoutData();
+            // Button listeners are set up in loadWorkoutData
             return;
         }
         
@@ -142,6 +290,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 
                 // Load workout data after login
                 await loadWorkoutData();
+                // Button listeners are set up in loadWorkoutData
             } else {
                 errorMessage.classList.remove('hidden');
                 passwordInput.value = '';
@@ -152,132 +301,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
         
-        // Handle increment button (complete workout)
-        const incrementButton = document.getElementById('incrementButton');
-        incrementButton.addEventListener('click', async function() {
-            // Increment streak
-            currentStreak++;
-            
-            // Add reward to monetary value
-            monetaryValue += workoutConfig.rewardPerWorkout;
-            
-            // Update highest streak if current is higher
-            if (currentStreak > highestStreak) {
-                highestStreak = currentStreak;
-            }
-            
-            // Create history entry
-            const now = new Date();
-            const historyEntry = {
-                action: 'workout_completed',
-                date: now.toLocaleDateString(),
-                time: now.toLocaleTimeString(),
-                streakAfter: currentStreak,
-                monetaryValueAfter: monetaryValue,
-                highestStreakAfter: highestStreak,
-                rewardEarned: workoutConfig.rewardPerWorkout,
-                timestamp: now.toISOString()
-            };
-            
-            // Save to storage
-            try {
-                // Try Firebase first
-                console.log('🔄 Updating workout progress in Firebase...');
-                await db.collection('workout-coupons').doc(couponType).update({
-                    currentStreak: currentStreak,
-                    monetaryValue: monetaryValue,
-                    highestStreak: highestStreak,
-                    history: firebase.firestore.FieldValue.arrayUnion(historyEntry),
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                console.log('✅ Firebase updated successfully');
-            } catch (error) {
-                console.error('❌ Firebase update error:', error.message);
-                console.log('💾 Saving to localStorage instead');
-            }
-            
-            // Always save to localStorage as backup
-            const localData = {
-                currentStreak: currentStreak,
-                monetaryValue: monetaryValue,
-                highestStreak: highestStreak,
-                history: workoutData.history || []
-            };
-            localData.history.push(historyEntry);
-            localStorage.setItem(storageKey, JSON.stringify(localData));
-            
-            // Update workout data
-            workoutData = localData;
-            
-            // Update display
-            updateDisplay();
-            
-            // Update history display
-            displayHistory(workoutData.history);
-            
-            // Show success message
-            showMessage(`Great job! Workout completed! +1 streak, +$${workoutConfig.rewardPerWorkout.toLocaleString()} earned! 🏋️`, 'success');
-        });
-        
-        // Handle reset button
-        const resetButton = document.getElementById('resetButton');
-        resetButton.addEventListener('click', async function() {
-            if (confirm('Are you sure you want to reset your streak? Your monetary value will remain unchanged.')) {
-                // Reset streak only (monetary value stays the same)
-                const previousStreak = currentStreak;
-                currentStreak = 0;
-                
-                // Create history entry
-                const now = new Date();
-                const historyEntry = {
-                    action: 'streak_reset',
-                    date: now.toLocaleDateString(),
-                    time: now.toLocaleTimeString(),
-                    streakBefore: previousStreak,
-                    streakAfter: currentStreak,
-                    monetaryValueAfter: monetaryValue,
-                    highestStreakAfter: highestStreak,
-                    timestamp: now.toISOString()
-                };
-                
-                // Save to storage
-                try {
-                    // Try Firebase first
-                    console.log('🔄 Resetting streak in Firebase...');
-                    await db.collection('workout-coupons').doc(couponType).update({
-                        currentStreak: currentStreak,
-                        history: firebase.firestore.FieldValue.arrayUnion(historyEntry),
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    console.log('✅ Streak reset in Firebase');
-                } catch (error) {
-                    console.error('❌ Firebase reset error:', error.message);
-                    console.log('💾 Saving to localStorage instead');
-                }
-                
-                // Always save to localStorage as backup
-                const localData = {
-                    currentStreak: currentStreak,
-                    monetaryValue: monetaryValue,
-                    highestStreak: highestStreak,
-                    history: workoutData.history || []
-                };
-                localData.history.push(historyEntry);
-                localStorage.setItem(storageKey, JSON.stringify(localData));
-                
-                // Update workout data
-                workoutData = localData;
-                
-                // Update display
-                updateDisplay();
-                
-                // Update history display
-                displayHistory(workoutData.history);
-                
-                // Show success message
-                showMessage('Streak reset! Your monetary value remains unchanged. Ready for a fresh start! 🔄', 'success');
-            }
-        });
+
         
         function showMessage(message, type) {
             const workoutMessage = document.getElementById('workoutMessage');
