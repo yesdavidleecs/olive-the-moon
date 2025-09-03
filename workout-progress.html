@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Progress Coupon</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-box">
+            <h2 class="login-title">Enter the Magic Word</h2>
+            <p class="login-subtitle">This coupon is for someone special</p>
+            <form id="loginForm">
+                <input type="password" id="passwordInput" placeholder="Enter password" required>
+                <button type="submit" class="login-button">View Coupon</button>
+            </form>
+            <p class="error-message hidden" id="errorMessage">Incorrect password. Try again!</p>
+        </div>
+    </div>
+
+    <!-- Coupon Detail Page -->
+    <div class="coupon-detail-wrapper hidden" id="mainContent">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <h3 class="nav-brand">Olive The Moon</h3>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#coupons" class="nav-link">Back to Coupons</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="coupon-detail-content">
+            <div class="coupon-detail-card">
+                <div class="coupon-header">
+                    <h1 class="coupon-detail-title" id="couponTitle">
+                        Workout Progress Coupon
+                    </h1>
+                    <div class="workout-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Current Streak:</span>
+                            <span class="stat-value" id="currentStreak">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Highest Streak:</span>
+                            <span class="stat-value" id="highestStreak">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Monetary Value:</span>
+                            <span class="stat-value" id="monetaryValue">$0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="coupon-message" id="couponMessage">
+                    <p>Track your workout progress and earn rewards! Each workout session increases your streak and adds to your monetary value.</p>
+                    <p class="no-expiration">No expiration date ♥</p>
+                </div>
+
+                <div class="coupon-image-container">
+                    <img src="coupons/coupon.jpg" alt="Workout Progress Coupon" onerror="this.style.display='none'">
+                </div>
+
+                <div class="workout-controls" id="workoutControls">
+                    <h3>Workout Progress Controls</h3>
+                    <p class="workout-info">Reward per workout: <span id="rewardAmount">$100</span></p>
+                    
+                    <div class="button-group">
+                        <button type="button" class="workout-button increment-button" id="incrementButton">
+                            🏋️ Complete Workout (+1 Streak)
+                        </button>
+                        <button type="button" class="workout-button reset-button" id="resetButton">
+                            🔄 Reset Streak
+                        </button>
+                    </div>
+                    
+                    <div class="workout-message hidden" id="workoutMessage"></div>
+                </div>
+                
+                <div class="workout-history hidden" id="workoutHistory">
+                    <h4>Workout History</h4>
+                    <ul id="historyList"></ul>
+                </div>
+
+                <div class="coupon-footer">
+                    <p>Made with love, just for you ♥</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Your Firebase configuration -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Workout progress coupon script -->
+    <script src="workout-progress.js"></script>
+</body>
+</html>
